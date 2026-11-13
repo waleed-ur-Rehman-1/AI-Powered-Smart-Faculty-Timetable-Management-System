@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  COORDINATOR
+  FACULTY
+}
+
+enum TimetableStatus {
+  DRAFT
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(FACULTY)
+  faculty   Faculty?
+  createdAt DateTime @default(now())
+}
+
+model Faculty {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  name         String
+  departmentId String
+  maxHours     Int      @default(18)
+  
+  user         User     @relation(fields: [userId], references: [id])
+  department   Department @relation(fields: [departmentId], references: [id])
+  timetables   TimetableEntry[]
+}
+
+model Department {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  faculties Faculty[]
+  courses   Course[]
+}
+
+model Course {
+  id           String   @id @default(uuid())
+  code         String   @unique
+  name         String
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  timetables   TimetableEntry[]
+}
+
+model Classroom {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  capacity  Int
+  timetables TimetableEntry[]
+}
+
+model Semester {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  timetables TimetableEntry[]
+}
+
+model TimeSlot {
+  id        String   @id @default(uuid())
+  dayOfWeek Int      
+  startTime String   
+  endTime   String   
+  timetables TimetableEntry[]
+}
+
+model TimetableEntry {
+  id           String   @id @default(uuid())
+  courseId     String
+  facultyId    String
+  classroomId  String
+  timeSlotId   String
+  semesterId   String
+  status       TimetableStatus @default(DRAFT)
+
+  course       Course    @relation(fields: [courseId], references: [id])
+  faculty      Faculty   @relation(fields: [facultyId], references: [id])
+  classroom    Classroom @relation(fields: [classroomId], references: [id])
+  timeSlot     TimeSlot  @relation(fields: [timeSlotId], references: [id])
+  semester     Semester  @relation(fields: [semesterId], references: [id])
+
+  @@unique([facultyId, timeSlotId, semesterId], name: "unique_faculty_slot")
+  @@unique([classroomId, timeSlotId, semesterId], name: "unique_room_slot")
+}

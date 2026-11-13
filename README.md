@@ -1,56 +1,142 @@
-# Welcome to your Expo app 👋
+# 📅 AI-Powered Smart Faculty Timetable Management System
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Welcome to the AI-Powered Timetable System! This is a full-stack mobile application designed for Universities. It allows Administrators to manage Faculty, Courses, and Classrooms, and uses an **AI Engine** to automatically generate conflict-free timetables. Teachers can log in to view their personalized schedules.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 What Does This App Do? (Features)
 
+### 👑 For Administrators:
+
+- **Manage Data**: Add, view, and manage Teachers, Courses, and Classrooms directly from the mobile app.
+- **AI Generation**: Click a button to let the AI automatically assign classes to teachers and rooms without any scheduling conflicts (e.g., no teacher is in two places at once).
+- **Dashboard**: See a quick overview of the whole university (Total Teachers, Total Classes Scheduled, etc.).
+
+### 👨‍🏫 For Faculty Members (Teachers):
+
+- **Personal Dashboard**: See how many classes you have today and your maximum allowed teaching hours.
+- **View Timetable**: View your weekly class schedule, including course names, rooms, and times.
+- **Role-Based Security**: Teachers only see their own schedule, not the whole university's schedule.
+
+---
+
+## 🛠️ Technology Used
+
+- **Mobile App (Frontend)**: React Native (Expo), Expo Router for navigation, Zustand for state management, Axios for API calls.
+- **Backend (Server)**: Node.js, Express.js, TypeScript.
+- **Database**: Neon (Serverless PostgreSQL), Prisma ORM.
+- **AI & Security**: Constraint-based AI scheduling algorithm, JWT (JSON Web Tokens) for secure login, bcrypt for password hashing.
+
+---
+
+## 📁 Project Structure
+
+This project is split into two main folders:
+
+1. `waleed/` (The Mobile App)
+2. `waleed-backend/` (The Server & Database API)
+
+---
+
+## ⚙️ How to Install and Run the Project (Step-by-Step)
+
+### Prerequisites
+
+Make sure you have **Node.js** and **Git** installed on your computer. You will also need an account on **Neon.tech** (for the database).
+
+### Step 1: Set up the Backend
+
+1. Open a terminal and navigate to the backend folder:
    ```bash
-   npm install
+   cd waleed-backend
+   Install dependencies:
    ```
 
-2. Start the app
+bash
+npm install
+Create a .env file in the waleed-backend folder and add your Neon Database URL:
 
-   ```bash
-   npx expo start
-   ```
+env
+DATABASE_URL="postgresql://your_neon_db_url_here"
+JWT_SECRET="super_secret_key_123"
+PORT=5000
+Push the database schema to your Neon database:
 
-In the output, you'll find options to open the app in a
+bash
+npx prisma db push
+npx prisma generate
+Start the backend server:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+bash
+npm run dev
+(The server should now be running on http://localhost:5000)
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Step 2: Set up the Mobile App
+Open a new terminal and navigate to the mobile folder:
 
-## Get a fresh project
+bash
+cd waleed
+Install dependencies:
 
-When you're ready, run:
+bash
+npm install
+Start the Expo development server:
 
-```bash
-npm run reset-project
+bash
+npx expo start -c
+Press a to open on an Android Emulator, or scan the QR code with the Expo Go app on your physical phone.
+
+🔑 Default Login Credentials
+Use these accounts to test the different roles in the app:
+
+👑 Admin Account:
+
+Email: admin@university.edu
+
+Password: password123
+
+👨‍🏫 Teacher Account 1:
+
+Email: ali@university.edu
+
+Password: password123
+
+👨‍🏫 Teacher Account 2:
+
+Email: sara@university.edu
+
+Password: password123
+
+🧠 How the AI Scheduling Works
+When the Admin clicks "Generate AI Timetable", the backend looks at all unassigned courses. It loops through available time slots and rooms. It strictly checks if the teacher is already busy at that time, or if the room is already booked. If both are free, it assigns the class. If there is a conflict, it moves to the next slot automatically.
+
+text
+
+---
+
+### 🐙 How to Push to GitHub (Commands)
+
+Before pushing, we **MUST** make sure your `.env` file (which contains your secret database password) is not uploaded to GitHub.
+
+#### Step 1: Add a `.gitignore` file
+
+Make sure you have a file named `.gitignore` in **both** `waleed` and `waleed-backend` folders. Open them and make sure these lines are inside:
+
+```text
+node_modules/
+.env
+.expo/
+dist/
+Step 2: Create a Repository on GitHub
+Go to GitHub.com and log in.
+
+Click the "+" icon in the top right -> New repository.
+
+Name it AI-Faculty-Timetable-System.
+
+Keep it Public or Private (your choice). DO NOT check "Add a README file" or "Add .gitignore".
+
+Click Create repository.
+
+Copy the URL it gives you (it looks like https://github.com/YOUR_USERNAME/AI-Faculty-Timetable-System.git).
 ```
-
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
